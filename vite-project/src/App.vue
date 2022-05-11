@@ -13,7 +13,7 @@
               <td>{{ p.name }}</td>
               <td>{{ p.price }}</td>
               <td><button @click="p.quantity = addProduct(p.quantity, p.price)">Dodaj</button></td>
-              <td><button @click="p.quantity = removeProduct(p.quantity, p.price)">Usuń</button></td>
+              <td><button v-bind:disable="deactivate" @click="p.quantity = removeProduct(p.quantity, p.price)">Usuń</button></td>
           </tr>
         </table>
     </div>
@@ -46,16 +46,20 @@
 
     const filteredProducts = computed(() => products.value.filter(p => p.quantity > 0))
     const combinedValue = ref(0)
+    const deactivate = ref(false)
     
     function addProduct (quantity, price) {
-      quantity += quantity
-      combinedValue.value += price
+      quantity++
+      combinedValue.value = combinedValue.value + price
       return quantity
     }
 
     function removeProduct (quantity, price) {
-      quantity -= quantity
-      combinedValue.value -= price
+      if (quantity == 0) {
+        deactivate = true
+      }
+      quantity--
+      combinedValue.value = combinedValue.value - price
       return quantity
     }
 </script>
